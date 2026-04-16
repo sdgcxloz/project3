@@ -1,35 +1,53 @@
-async function fetchWorld() {
-    const res = await fetch("https://tinkr.tech/sdb/poly/wander");
-    const world = await res.json();
-    return world;
+let playerKey = null;
+async function join() {
+   const res = await fetch("https://tinkr.tech/sdb/poly/wander", {
+       method: "POST",
+       headers: {"Content-Type": "application/json"},
+       body: JSON.stringify({
+           action: "join",
+           username: "student_" + Math.floor(Math.random() * 1000)
+       })
+   });
+
+   const data = await res.json();
+   playerKey = data.player_key;
+
+   console.log("Joined with key:", playerKey);
 }
 
-function renderWorld(world) {
-    const container = document.getElementById("game");
-    container.innerHTML = "";
-
-    for (const player of world.players) {
-        const playerDiv = document.createElement("div");
-        playerDiv.classList.add("player");
-        playerDiv.style.position = "absolute";
-        playerDiv.style.left = player.x + "px";
-        playerDiv.style.top = player.y + "px";
-
-        const img = document.createElement("img");
-        img.src = player.image;
-        img.width = player.width;
-        img.height = player.height;
-        playerDiv.appendChild(img);
-
-        const name = document.createElement("div");
-        name.textContent = player.username;
-        playerDiv.appendChild(name);
-
-        container.appendChild(playerDiv);
-    }
+async function getWorld() {
+   const res = await fetch("https://tinkr.tech/sdb/poly/wander");
+   return await res.json();
 }
+function draw(world) {
+   const game = document.getElementById("game");
+   game.innerHTML = "";
 
-setInterval(async () => {
-    const world = await fetchWorld();
-    renderWorld(world);
-}, 1000);
+   for (let p of world.players) {
+       const div = document.createElement("div");
+       div.className = "player";
+       div.style.left = p.x + "px";
+       div.style.top = p.y + "px";
+
+       const img = document.createElement("img");
+       img.src = p.image;
+       img.width = p.width;
+       img.height = p.height;
+
+       const name = document.createElement("div");
+       name.textContent = p.username;
+
+       div.appendChild(img);
+       div.appendChild(name);
+       game.appendChild(div);
+   }
+}
+async function start() {
+   await join();
+
+   setInterval(async () => {
+       const world = await getWorld();
+       draw(world);
+   }, 1000);
+}
+start();
