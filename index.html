@@ -3,19 +3,55 @@
 <head>
 <meta charset="UTF-8">
 <title>WanderWorld</title>
+
 <style>
-  #game {
+
+#game {
     position: relative;
     width: 800px;
     height: 600px;
     border: 1px solid black;
-  }
+    overflow: hidden;
+}
+
+.player {
+    position: absolute;
+    text-align: center;
+}
+
+.player img {
+    image-rendering: pixelated;
+}
+
+.name {
+    font-size: 12px;
+    font-weight: bold;
+}
+
+.bubble {
+    background: white;
+    border: 1px solid black;
+    border-radius: 5px;
+    padding: 2px 5px;
+    font-size: 12px;
+    margin-top: 2px;
+}
+
 </style>
 </head>
+
 <body>
+
+<h1>WanderWorld</h1>
 
 <div id="game"></div>
 
+<br>
+
+<input type="text" id="msg" maxlength="200" placeholder="Write message">
+<button id="send">Send</button>
+
 <script src="script.js"></script>
+
 </body>
 </html>
